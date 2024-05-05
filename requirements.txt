@@ -1,0 +1,5 @@
+# Note! These reqs are only for the GHA linter & testing
+black==24.4.2
+isort==5.13.2
+ruff==0.4.2
+pytest==8.2.0
