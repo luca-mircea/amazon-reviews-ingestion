@@ -1,5 +1,6 @@
 from unittest import TestCase
 
 
-class LinterTest(TestCase):
-    assert True
+class TestLinter(TestCase):
+    def test_test(self):
+        assert True
