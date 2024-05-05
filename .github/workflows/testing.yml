@@ -1,4 +1,4 @@
-name: Python Linting and Formatting
+name: Testing
 
 on: [push, pull_request]
 
