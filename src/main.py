@@ -19,9 +19,9 @@ def process_raw_reviews_data(
     api_interactor = APIInteractor(BASE_URL, BEARER_TOKEN)
 
     # extract data
-    reviews = retrieve_reviews_data(
+    reviews = retrieve_reviews_data(  # noqa: F841
         api_interactor, start_timestamp=None, end_timestamp=None
-    )  # noqa: F841
+    )
 
     # transform (i.e. clean) data
 
@@ -38,6 +38,6 @@ def process_raw_metadata(
     api_interactor = APIInteractor(BASE_URL, BEARER_TOKEN)
 
     # extract data
-    metadata = retrieve_metadata(
+    metadata = retrieve_metadata( # noqa: F841
         api_interactor, start_timestamp=None, end_timestamp=None
-    )  # noqa: F841
+    )
