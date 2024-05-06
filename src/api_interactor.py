@@ -10,6 +10,10 @@ to retrieve data for specific timestamps
 """
 
 import json
+import os
+import re
+from datetime import datetime
+from typing import Optional
 
 import pandas as pd
 import requests
@@ -91,23 +95,80 @@ class APIInteractor:
 
             return response_data_df
 
+    @staticmethod
     def retrieve_data_from_csv(
-        self, endpoint: str, start_timestamp: str, end_timestamp: str
+        endpoint: str, start_timestamp: Optional[str], end_timestamp: Optional[str]
     ) -> pd.DataFrame:
         """Write code for reading data from folders with csvs"""
-        data = pd.DataFrame(
-            {
-                "endpoint": self.base_url + f"/{endpoint}",
-                "start_time": start_timestamp,
-                "end_time": end_timestamp,
-            },
-            index=[0],
-        )
-        return data
+
+        # create empty df to catch results
+        result_data = pd.DataFrame()
+
+        # create OS-agnostic path
+        path_to_search = os.path.join("data_short")
+
+        # find the relevant files
+        list_of_files = [file_name for file_name in os.listdir(path_to_search)]
+
+        if endpoint == "reviews":
+            files_to_read = [
+                file_name
+                for file_name in list_of_files
+                if bool(re.search("reviews", file_name))
+            ]
+        elif endpoint == "metadata":
+            files_to_read = [
+                file_name
+                for file_name in list_of_files
+                if bool(re.search("metadata", file_name))
+            ]
+
+        else:
+            raise IncorrectEndpointSpecified(
+                "Incorrect endpoint specified - check your data folder and try again!"
+            )
+
+        # file by file, add to results_df
+        for file_name in files_to_read:
+            csv_path = os.path.join(path_to_search, file_name)
+
+            data_to_read = pd.read_csv(csv_path, index_col=False)
+
+            result_data = pd.concat(
+                [result_data, data_to_read], axis=0, ignore_index=True
+            )
+
+        # finally, filter based on the timestamp
+        if start_timestamp is not None:
+            # first convert str to unix
+            start_timestamp_as_unix = datetime.strptime(
+                start_timestamp, "%Y-%m-%d %H:%M:%S.%f"
+            ).timestamp()
+
+            # then filter data
+            result_data = result_data[
+                result_data["unixReviewTime"] >= start_timestamp_as_unix
+            ]
+
+            # reset index to return clean
+            result_data.reset_index(drop=True, inplace=True)
+
+        if end_timestamp is not None:
+            # same steps as for start timestamp
+            end_timestamp_as_unix = datetime.strptime(
+                end_timestamp, "%Y-%m-%d %H:%M:%S.%f"
+            ).timestamp()
+
+            result_data = result_data[
+                result_data["unixReviewTime"] <= end_timestamp_as_unix
+            ]
+            result_data.reset_index(drop=True, inplace=True)
+
+        return result_data
 
     @staticmethod
     def retrieve_data_from_datasets_package(
-        self, endpoint: str, start_timestamp: str, end_timestamp: str
+        endpoint: str, start_timestamp: str, end_timestamp: str
     ) -> pd.DataFrame:
         """Retrieve data from the pre-existing "endpoint"""
 
