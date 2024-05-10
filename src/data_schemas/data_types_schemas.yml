@@ -1,0 +1,16 @@
+reviews_fact_table:
+  review_id: str
+  reviewer_id: str
+  item_id: str
+  review_text: str
+  review_summary: str
+  rating: float
+  count_review_helpful_yes: int
+  count_review_helpful_no: int
+  review_unix_time: int
+  review_date: int
+reviewers:
+  reviewer_id: str
+reviewer_user_names:
+  reviewer_id: str
+  reviewer_user_name: str

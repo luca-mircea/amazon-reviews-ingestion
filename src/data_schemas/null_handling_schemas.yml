@@ -1,0 +1,16 @@
+reviews_fact_table:
+  review_id: PK
+  reviewer_id: Unknown
+  item_id: DROP
+  review_text: None
+  review_summary: None
+  rating: 0
+  count_review_helpful_yes: -1
+  count_review_helpful_no: -1
+  review_unix_time: 0
+  review_date: 0
+reviewers:
+  reviewer_id: PK
+reviewer_user_names:
+  reviewer_id: DROP
+  reviewer_user_name: None

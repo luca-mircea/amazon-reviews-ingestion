@@ -1,0 +1,16 @@
+reviews_fact_table:
+  review_id: 'review_id'
+  reviewerID: 'reviewer_id'
+  asin: 'item_id'
+  reviewText: 'review_text'
+  summary: 'review_summary'
+  overall: 'rating'
+  count_review_helpful_yes: 'count_review_helpful_yes'
+  count_review_helpful_no: 'count_review_helpful_no'
+  unixReviewTime: 'review_unix_time'
+  review_date_parsed_as_int: 'review_date'
+reviewers:
+  reviewerID: 'reviewer_id'
+reviewer_user_names:
+  reviewerID: 'reviewer_id'
+  reviewerName: 'reviewer_user_name'

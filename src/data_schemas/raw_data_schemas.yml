@@ -1,0 +1,8 @@
+reviews: [
+  'Unnamed: 0', 'reviewerID', 'asin', 'reviewerName', 'helpful',
+  'reviewText', 'overall', 'summary', 'unixReviewTime', 'reviewTime'
+]
+metadata: [
+  'metadataid', 'asin', 'salesrank', 'imurl', 'categories', 'title',
+  'description', 'price', 'related', 'brand'
+]
