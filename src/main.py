@@ -9,11 +9,12 @@ from typing import Optional
 from src.api_interactor import APIInteractor
 from src.constants import BASE_URL, BEARER_TOKEN
 from src.extract import retrieve_metadata, retrieve_reviews_data
-from src.transform import transform_reviews_data
-from src.validate import validate_raw_data
+from src.load import upload_to_dwh
+from src.transform import transform_metadata, transform_reviews_data
+from src.validate import list_bucket_files_and_update_time, validate_raw_data
 
 
-def process_raw_reviews_data(
+def process_raw_reviews_data_with_timestamps(
     start_timestamp: Optional[str] = None, end_timestamp: Optional[str] = None
 ) -> None:
     """Extract, transform, load raw reviews data"""
@@ -21,30 +22,128 @@ def process_raw_reviews_data(
     api_interactor = APIInteractor(BASE_URL, BEARER_TOKEN)
 
     # extract data
-    reviews = retrieve_reviews_data(  # noqa: F841
-        api_interactor, start_timestamp=start_timestamp, end_timestamp=end_timestamp
+    reviews = retrieve_reviews_data(
+        api_interactor,
+        retrieve_from="s3",
+        start_timestamp=start_timestamp,
+        end_timestamp=end_timestamp,
     )
 
     validate_raw_data(reviews, "reviews")
+
     # transform (i.e. clean) data
 
     reviews_processed_dict = transform_reviews_data(reviews)
-    reviews_fact_table = reviews_processed_dict["reviews_fact_table"]  # noqa: F841
-    reviewers = reviews_processed_dict["reviewers"]  # noqa: F841
-    reviewers_user_names = reviews_processed_dict["reviewers_user_names"]  # noqa: F841
+    reviews_fact_table = reviews_processed_dict["reviews_fact_table"]
+    reviewers = reviews_processed_dict["reviewers"]
+    reviewers_user_names = reviews_processed_dict["reviewers_user_names"]
+    date_dimension = reviews_processed_dict["date_dimension"]
 
-    # to be continued
+    # load
+    upload_to_dwh(reviews_fact_table, "reviews_fact_table")
+    upload_to_dwh(reviewers, "reviewers")
+    upload_to_dwh(reviewers_user_names, "reviewers_user_names")
+    upload_to_dwh(date_dimension, "date_dimension")
 
 
-def process_raw_metadata(
+def process_raw_metadata_with_timestamps(
     start_timestamp: Optional[str] = None, end_timestamp: Optional[str] = None
 ) -> None:
     """Extract, transform, load raw metadata"""
     # first set up client
+
     api_interactor = APIInteractor(BASE_URL, BEARER_TOKEN)
 
     # extract data
-    metadata = retrieve_metadata(  # noqa: F841
-        api_interactor, start_timestamp=start_timestamp, end_timestamp=end_timestamp
+    metadata = retrieve_metadata(
+        api_interactor,
+        retrieve_from="s3",
+        start_timestamp=start_timestamp,
+        end_timestamp=end_timestamp,
     )
+
     validate_raw_data(metadata, "metadata")
+
+    # transform
+    (
+        products,
+        product_images,
+        product_sales_ranking,
+        product_categories,
+        product_bought_together,
+        product_also_viewed,
+    ) = transform_metadata(metadata)
+
+    # load
+
+    upload_to_dwh(products, "products")
+    upload_to_dwh(product_images, "product_images")
+    upload_to_dwh(product_sales_ranking, "product_sales_ranking")
+    upload_to_dwh(product_categories, "product_categories")
+    upload_to_dwh(product_bought_together, "product_bought_together")
+    upload_to_dwh(product_also_viewed, "product_also_viewed")
+
+
+def process_raw_reviews_data_without_timestamps() -> None:
+    """Extract, transform, load raw reviews data"""
+    # first set up client
+    api_interactor = APIInteractor(BASE_URL, BEARER_TOKEN)
+
+    # extract data
+    reviews = retrieve_reviews_data(
+        api_interactor, retrieve_from="s3", start_timestamp=None, end_timestamp=None
+    )
+
+    validate_raw_data(reviews, "reviews")
+
+    # transform (i.e. clean) data
+
+    reviews_processed_dict = transform_reviews_data(reviews)
+    reviews_fact_table = reviews_processed_dict["reviews_fact_table"]
+    reviewers = reviews_processed_dict["reviewers"]
+    reviewers_user_names = reviews_processed_dict["reviewers_user_names"]
+    date_dimension = reviews_processed_dict["date_dimension"]
+
+    # load
+    upload_to_dwh(reviews_fact_table, "reviews_fact_table")
+    upload_to_dwh(reviewers, "reviewers")
+    upload_to_dwh(reviewers_user_names, "reviewers_user_names")
+    upload_to_dwh(date_dimension, "date_dimension")
+
+
+def process_raw_metadata_without_timestamps() -> None:
+    """Extract, transform, load raw metadata"""
+    # first set up client
+
+    api_interactor = APIInteractor(BASE_URL, BEARER_TOKEN)
+
+    # extract data
+    metadata = retrieve_metadata(
+        api_interactor, retrieve_from="s3", start_timestamp=None, end_timestamp=None
+    )
+
+    validate_raw_data(metadata, "metadata")
+
+    # transform
+    (
+        products,
+        product_images,
+        product_sales_ranking,
+        product_categories,
+        product_bought_together,
+        product_also_viewed,
+    ) = transform_metadata(metadata)
+
+    # load
+
+    upload_to_dwh(products, "products")
+    upload_to_dwh(product_images, "product_images")
+    upload_to_dwh(product_sales_ranking, "product_sales_ranking")
+    upload_to_dwh(product_categories, "product_categories")
+    upload_to_dwh(product_bought_together, "product_bought_together")
+    upload_to_dwh(product_also_viewed, "product_also_viewed")
+
+
+def check_successful_completion():
+    """List bucket objects + time of download"""
+    list_bucket_files_and_update_time()

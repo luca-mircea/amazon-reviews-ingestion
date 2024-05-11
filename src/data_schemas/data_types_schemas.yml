@@ -14,3 +14,29 @@ reviewers:
 reviewer_user_names:
   reviewer_id: str
   reviewer_user_name: str
+date_dimension:
+  date_as_int: int
+  date_string: str
+products:
+  item_id: str
+  title: str
+  brand: str
+  description: str
+  price: float
+  currency: str
+product_images:
+  item_id: str
+  image_url: str
+product_sales_ranking:
+  item_id: str
+  category_ranked: str
+  ranking: int
+product_categories:
+  item_id: str
+  category: str
+product_bought_together:
+  item_id: str
+  bought_together_with_item_id: str
+product_also_viewed:
+  item_id: str
+  also_viewed_item_id: str

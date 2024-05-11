@@ -13,6 +13,7 @@ datasets = "*"
 isort = "*"
 ruff = "*"
 pytest = "*"
+boto3 = "*"
 
 [dev-packages]
 

@@ -13,30 +13,55 @@ import yaml
 from src.api_interactor import APIInteractor
 
 
+class IncorrectRetrievalSpecification(Exception):
+    pass
+
+
 def retrieve_reviews_data(
     api_interactor: APIInteractor,
+    retrieve_from: str,
     start_timestamp: Optional[str],
     end_timestamp: Optional[str],
 ) -> pd.DataFrame:
 
-    reviews = api_interactor.retrieve_data_from_csv(
-        endpoint="reviews", start_timestamp=start_timestamp, end_timestamp=end_timestamp
-    )
+    if retrieve_from == "local":
+        reviews = api_interactor.retrieve_data_from_csv(
+            endpoint="reviews",
+            start_timestamp=start_timestamp,
+            end_timestamp=end_timestamp,
+        )
+
+    elif retrieve_from == "s3":
+        reviews = api_interactor.retrieve_data_from_s3("reviews")
+
+    else:
+        raise IncorrectRetrievalSpecification(
+            "Incorrect retrieval specified - check the 'retrieve_from' argument"
+        )
 
     return reviews
 
 
 def retrieve_metadata(
     api_interactor: APIInteractor,
+    retrieve_from: str,
     start_timestamp: Optional[str],
     end_timestamp: Optional[str],
 ) -> pd.DataFrame:
 
-    metadata = api_interactor.retrieve_data_from_csv(
-        endpoint="metadata",
-        start_timestamp=start_timestamp,
-        end_timestamp=end_timestamp,
-    )
+    if retrieve_from == "local":
+        metadata = api_interactor.retrieve_data_from_csv(
+            endpoint="metadata",
+            start_timestamp=start_timestamp,
+            end_timestamp=end_timestamp,
+        )
+    elif retrieve_from == "s3":
+        metadata = api_interactor.retrieve_data_from_s3("metadata")
+
+    else:
+        raise IncorrectRetrievalSpecification(
+            "Incorrect retrieval specified - check the 'retrieve_from' argument"
+        )
 
     return metadata
 
