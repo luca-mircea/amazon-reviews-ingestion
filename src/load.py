@@ -12,8 +12,7 @@ import tempfile
 import pandas as pd
 from boto3 import Session
 
-from src.constants import (S3_ACCESS_KEY_ID, S3_ACCESS_KEY_SECRET,
-                           S3_BUCKET_NAME)
+from src.constants import S3_ACCESS_KEY_ID, S3_ACCESS_KEY_SECRET, S3_BUCKET_NAME
 
 
 def upload_data_to_s3(

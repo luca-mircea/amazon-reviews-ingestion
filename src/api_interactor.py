@@ -9,7 +9,7 @@ with a bearer token, and we can pass parameters to the API
 to retrieve data for specific timestamps
 """
 
-import json
+# import json
 import os
 import re
 from datetime import datetime
@@ -18,11 +18,11 @@ from typing import Optional
 import pandas as pd
 import requests
 from boto3 import Session
-from datasets import load_dataset
-from huggingface_hub import hf_hub_download
 
-from src.constants import (S3_ACCESS_KEY_ID, S3_ACCESS_KEY_SECRET,
-                           S3_BUCKET_NAME)
+from src.constants import S3_ACCESS_KEY_ID, S3_ACCESS_KEY_SECRET, S3_BUCKET_NAME
+
+# from datasets import load_dataset
+# from huggingface_hub import hf_hub_download
 
 
 class IncorrectEndpointSpecified(Exception):
@@ -170,6 +170,7 @@ class APIInteractor:
 
         return result_data
 
+    '''
     @staticmethod
     def retrieve_data_from_datasets_package(
         endpoint: str, start_timestamp: str, end_timestamp: str
@@ -211,6 +212,8 @@ class APIInteractor:
 
         else:
             raise IncorrectEndpointSpecified("Incorrect endpoint supplied!")
+
+    '''
 
     @staticmethod
     def retrieve_data_from_s3(table_name: str) -> pd.DataFrame:

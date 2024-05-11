@@ -8,8 +8,7 @@ import pandas as pd
 import yaml
 from boto3 import Session
 
-from src.constants import (S3_ACCESS_KEY_ID, S3_ACCESS_KEY_SECRET,
-                           S3_BUCKET_NAME)
+from src.constants import S3_ACCESS_KEY_ID, S3_ACCESS_KEY_SECRET, S3_BUCKET_NAME
 
 
 class SchemaMismatch(Exception):

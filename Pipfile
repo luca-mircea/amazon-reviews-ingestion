@@ -4,16 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-jupyter = "*"
-black = "*"
 pandas = "*"
-requests = "*"
-python-dotenv = "*"
-datasets = "*"
-isort = "*"
-ruff = "*"
-pytest = "*"
 boto3 = "*"
+pyyaml = "*"
+python-dotenv = "*"
+requests = "*"
 
 [dev-packages]
 
