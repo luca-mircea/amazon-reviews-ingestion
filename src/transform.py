@@ -9,9 +9,11 @@ from typing import Tuple
 
 import pandas as pd
 
-from src.extract import (import_column_data_type_schemas,
-                         import_column_renaming_schemas,
-                         import_null_handling_schemas)
+from src.extract import (
+    import_column_data_type_schemas,
+    import_column_renaming_schemas,
+    import_null_handling_schemas,
+)
 from src.validate import PKNotUnique, SchemaMismatch
 
 COLUMN_RENAMING_SCHEMAS = import_column_renaming_schemas()
@@ -21,7 +23,7 @@ NULL_HANDLING_SCHEMAS = import_null_handling_schemas()
 
 def process_reviews_raw_columns(reviews: pd.DataFrame) -> pd.DataFrame:
     """Fix the helpfulness, reviewTime, review_id columns"""
-
+    # parse the date out of the strangely formatted string
     reviews["review_date_parsed_as_int"] = [
         int(  # we like int bcs. it's more memory efficient
             date_string.split(",")[1].strip()  # year

@@ -30,11 +30,15 @@ ENV PATH="/.venv/bin:$PATH"
 
 # Create and switch to a new user
 RUN useradd --create-home appuser
-WORKDIR /home/appuser
+WORKDIR .
 USER appuser
 
 # Install application into container
 COPY . .
 
 # Run the application
-ENTRYPOINT python "src/entrypoint.py"
+# ENTRYPOINT python "entrypoint.py"
+
+# docker run takeaway-challenge python src/entrypoint.py --task process_raw_reviews_data_without_timestamps
+# docker run takeaway-challenge python src/entrypoint.py --task process_raw_metadata_without_timestamps
+# docker run takeaway-challenge python src/entrypoint.py --task check_successful_completion
