@@ -17,8 +17,12 @@ from typing import Optional
 
 import pandas as pd
 import requests
+from boto3 import Session
 from datasets import load_dataset
 from huggingface_hub import hf_hub_download
+
+from src.constants import (S3_ACCESS_KEY_ID, S3_ACCESS_KEY_SECRET,
+                           S3_BUCKET_NAME)
 
 
 class IncorrectEndpointSpecified(Exception):
@@ -207,3 +211,27 @@ class APIInteractor:
 
         else:
             raise IncorrectEndpointSpecified("Incorrect endpoint supplied!")
+
+    @staticmethod
+    def retrieve_data_from_s3(table_name: str) -> pd.DataFrame:
+        """Retrieve data from the S3 bucket"""
+        download_path = f"data/{table_name}.csv"
+
+        session = Session(
+            aws_access_key_id=S3_ACCESS_KEY_ID,
+            aws_secret_access_key=S3_ACCESS_KEY_SECRET,
+            region_name="eu-north-1",
+        )
+
+        s3 = session.resource("s3")
+
+        s3.meta.client.download_file(
+            Bucket=S3_BUCKET_NAME,
+            Key=f"raw_data/{table_name}.csv",
+            Filename="data/reviews.csv",
+        )
+
+        print(f"Data ({table_name}) downloaded successfully")
+        data = pd.read_csv(download_path)
+
+        return data

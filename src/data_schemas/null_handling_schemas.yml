@@ -14,3 +14,29 @@ reviewers:
 reviewer_user_names:
   reviewer_id: DROP
   reviewer_user_name: None
+date_dimension:
+  date_as_int: PK
+  date_string: None
+products:
+  item_id: PK
+  title: Unknown
+  brand: Unknown
+  description: None
+  price: -1
+  currency: Unknown
+product_images:
+  item_id: PK
+  image_url: DROP
+product_sales_ranking:
+  item_id: PK Multiple
+  category_ranked: DROP
+  ranking: DROP
+product_categories:
+  item_id: PK Multiple
+  category: DROP
+product_bought_together:
+  item_id: PK Multiple
+  bought_together_with_item_id: DROP
+product_also_viewed:
+  item_id: PK Multiple
+  also_viewed_item_id: DROP

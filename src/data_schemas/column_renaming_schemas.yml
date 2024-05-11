@@ -14,3 +14,28 @@ reviewers:
 reviewer_user_names:
   reviewerID: 'reviewer_id'
   reviewerName: 'reviewer_user_name'
+date_dimension:
+  review_date_parsed_as_int: 'date_as_int'
+products:
+  asin: 'item_id'
+  title: 'title'
+  brand: 'brand'
+  description: 'description'
+  price: 'price'
+  currency: 'currency'
+product_images:
+  asin: 'item_id'
+  imurl: 'image_url'
+product_sales_ranking:
+  asin: 'item_id'
+  category_ranked: 'category_ranked'
+  ranking: 'ranking'
+product_categories:
+  item_id: 'item_id'
+  category: 'category'
+product_bought_together:
+  item_id: 'item_id'
+  bought_together: 'bought_together_with_item_id'
+product_also_viewed:
+  item_id: 'item_id'
+  also_viewed: 'also_viewed_item_id'
