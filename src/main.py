@@ -4,7 +4,6 @@ Here we keep the tasks for processing
 each of the different entrypoints/datasets
 """
 
-import os
 from typing import Optional
 
 from src.api_interactor import APIInteractor
@@ -12,7 +11,11 @@ from src.constants import BASE_URL, BEARER_TOKEN
 from src.extract import retrieve_metadata, retrieve_reviews_data
 from src.load import upload_to_dwh
 from src.transform import transform_metadata, transform_reviews_data
-from src.validate import list_bucket_files_and_update_time, validate_raw_data
+from src.validate import (
+    list_bucket_files_and_update_time,
+    validate_local_upload_mock_dwh,
+    validate_raw_data,
+)
 
 
 def process_raw_reviews_data_with_timestamps(
@@ -234,4 +237,4 @@ def check_successful_completion_s3():
 
 def check_successful_completion_locally():
     """List DWH objects created locally"""
-    os.listdir("mock_dwh")
+    validate_local_upload_mock_dwh()
