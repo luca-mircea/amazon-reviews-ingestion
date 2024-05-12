@@ -31,14 +31,17 @@ ENV PATH="/.venv/bin:$PATH"
 # Create and switch to a new (admin) user
 RUN useradd -ms /bin/bash admin
 WORKDIR .
-USER admin
-
 
 # Install application into container
 COPY . .
+
+# Change some permissions to make it possible to write CSVs inside
+RUN chown -R admin:admin ./mock_dwh
+RUN chmod 755 .
+USER admin
 
 # We run the application through commands, once the Docker is up and running
 
 # docker run takeaway-challenge python entrypoint.py --task process_raw_reviews_data_without_timestamps
 # docker run takeaway-challenge python entrypoint.py --task process_raw_metadata_without_timestamps
-# docker run takeaway-challenge python entrypoint.py --task check_successful_completion
+# docker run takeaway-challenge python entrypoint.py --task check_successful_completion_s3
