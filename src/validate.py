@@ -58,3 +58,10 @@ def list_bucket_files_and_update_time():
 
     # list contents
     print(contents_uploads)
+
+
+def validate_local_upload_mock_dwh() -> None:
+    """Read from the mock DWH csv, print latest 10"""
+    latest_uploads = pd.read_csv("mock_dwh/mock_dwh.csv")
+
+    print(latest_uploads[:10])
