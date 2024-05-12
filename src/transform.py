@@ -75,14 +75,15 @@ def transform_reviews_data(reviews: pd.DataFrame) -> dict:
 
     date_dimension = reviews[["review_date_parsed_as_int"]].copy()
 
-    # drop duplicates for reviewers - we'll check later if the PK is unique
+    # drop random duplicates
     reviewers.drop_duplicates(inplace=True)
     reviewer_user_names.drop_duplicates(inplace=True)
     date_dimension.drop_duplicates(inplace=True)
 
     # Note: normally you'd specify the cols to find dups on, but in this
-    # case it's all, and the result should still be 1 row/user
-    # because the cardinality of user ID and username is 1 to 1
+    # case it can be all; I've found multiple user_names to each
+    # reviewer, which is why I decided to split the data into
+    # two tables
 
     # now rename the columns
 
