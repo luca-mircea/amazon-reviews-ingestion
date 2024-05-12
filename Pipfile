@@ -9,6 +9,7 @@ boto3 = "*"
 pyyaml = "*"
 python-dotenv = "*"
 requests = "*"
+smart-open = "*"
 
 [dev-packages]
 

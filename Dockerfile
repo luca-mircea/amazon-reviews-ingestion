@@ -28,17 +28,17 @@ FROM base AS runtime
 COPY --from=python-deps /.venv /.venv
 ENV PATH="/.venv/bin:$PATH"
 
-# Create and switch to a new user
-RUN useradd --create-home appuser
+# Create and switch to a new (admin) user
+RUN useradd -ms /bin/bash admin
 WORKDIR .
-USER appuser
+USER admin
+
 
 # Install application into container
 COPY . .
 
-# Run the application
-# ENTRYPOINT python "entrypoint.py"
+# We run the application through commands, once the Docker is up and running
 
-# docker run takeaway-challenge python src/entrypoint.py --task process_raw_reviews_data_without_timestamps
-# docker run takeaway-challenge python src/entrypoint.py --task process_raw_metadata_without_timestamps
-# docker run takeaway-challenge python src/entrypoint.py --task check_successful_completion
+# docker run takeaway-challenge python entrypoint.py --task process_raw_reviews_data_without_timestamps
+# docker run takeaway-challenge python entrypoint.py --task process_raw_metadata_without_timestamps
+# docker run takeaway-challenge python entrypoint.py --task check_successful_completion
