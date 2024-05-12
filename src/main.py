@@ -71,14 +71,14 @@ def process_raw_metadata_with_timestamps(
     validate_raw_data(metadata, "metadata")
 
     # transform
-    (
-        products,
-        product_images,
-        product_sales_ranking,
-        product_categories,
-        product_bought_together,
-        product_also_viewed,
-    ) = transform_metadata(metadata)
+    results_dictionary = transform_metadata(metadata)
+
+    products = results_dictionary["products"]
+    product_images = results_dictionary["product_images"]
+    product_sales_ranking = results_dictionary["product_sales_ranking"]
+    product_categories = results_dictionary["product_categories"]
+    product_bought_together = results_dictionary["product_bought_together"]
+    product_also_viewed = results_dictionary["product_also_viewed"]
 
     # load
 
@@ -134,14 +134,14 @@ def process_raw_metadata_without_timestamps() -> None:
     validate_raw_data(metadata, "metadata")
 
     # transform
-    (
-        products,
-        product_images,
-        product_sales_ranking,
-        product_categories,
-        product_bought_together,
-        product_also_viewed,
-    ) = transform_metadata(metadata)
+    results_dictionary = transform_metadata(metadata)
+
+    products = results_dictionary["products"]
+    product_images = results_dictionary["product_images"]
+    product_sales_ranking = results_dictionary["product_sales_ranking"]
+    product_categories = results_dictionary["product_categories"]
+    product_bought_together = results_dictionary["product_bought_together"]
+    product_also_viewed = results_dictionary["product_also_viewed"]
 
     # load
 
@@ -203,14 +203,14 @@ def process_raw_metadata_without_timestamps_locally() -> None:
     validate_raw_data(metadata, "metadata")
 
     # transform
-    (
-        products,
-        product_images,
-        product_sales_ranking,
-        product_categories,
-        product_bought_together,
-        product_also_viewed,
-    ) = transform_metadata(metadata)
+    results_dictionary = transform_metadata(metadata)
+
+    products = results_dictionary["products"]
+    product_images = results_dictionary["product_images"]
+    product_sales_ranking = results_dictionary["product_sales_ranking"]
+    product_categories = results_dictionary["product_categories"]
+    product_bought_together = results_dictionary["product_bought_together"]
+    product_also_viewed = results_dictionary["product_also_viewed"]
 
     # load
 

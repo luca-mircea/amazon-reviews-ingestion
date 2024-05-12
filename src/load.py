@@ -8,7 +8,6 @@ overkill
 """
 
 import tempfile
-from datetime import datetime
 from io import StringIO
 
 import pandas as pd
@@ -32,7 +31,6 @@ def upload_data_to_s3(
         aws_access_key_id=S3_ACCESS_KEY_ID,
         aws_secret_access_key=S3_ACCESS_KEY_SECRET,
         region_name="eu-north-1",
-        # profile_name='dev'
     )
 
     s3 = session.resource("s3", use_ssl=False)
@@ -75,7 +73,9 @@ def upload_to_dwh(target_data: pd.DataFrame, table_name: str, upload_to: str) ->
         print("Upload successful!")
 
     elif upload_to == "mock_dwh_locally":
-        mock_dwh_file_list = pd.read_csv("mock_dwh/mock_dwh.csv")
+        target_data.to_csv(f"mock_dwh/{table_name}.csv")
+        """
+        mock_dwh_file_list = pd.read_csv("/mock_dwh/mock_dwh.csv")
 
         current_timestamp = str(datetime.now())
 
@@ -87,12 +87,12 @@ def upload_to_dwh(target_data: pd.DataFrame, table_name: str, upload_to: str) ->
             index=[0],
         )
 
-        mock_dwh_file_list.concat(
+        mock_dwh_file_list = pd.concat(
             [mock_dwh_file_list, this_upload], axis=0, ignore_index=True
         )
 
-        mock_dwh_file_list.to_csv("mock_dwh/mock_dwh.csv", index=False)
-
+        mock_dwh_file_list.to_csv("/mock_dwh/mock_dwh.csv", index=False)
+        """
         print("Upload successful!")
 
     else:

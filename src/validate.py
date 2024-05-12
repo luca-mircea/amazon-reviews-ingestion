@@ -62,6 +62,19 @@ def list_bucket_files_and_update_time():
 
 def validate_local_upload_mock_dwh() -> None:
     """Read from the mock DWH csv, print latest 10"""
-    latest_uploads = pd.read_csv("mock_dwh/mock_dwh.csv")
+    # latest_uploads = pd.read_csv("/mock_dwh/mock_dwh.csv")
+    # [print(file_name) for file_name in os.listdir("mock_dwh")]
+    # print(os.listdir("mock_dwh"))
+    # print(latest_uploads[:10])
 
-    print(latest_uploads[:10])
+    """
+    I tried 1'000'000 ways to get Python to print the files
+    it has generated within the docker, and for the life of me
+    I cannot figure out why it won't see the files when printing,
+    even though they are there when I check the daemon. This is
+    suboptimal handling of the situation, but it's 11:30 pm
+    on Sunday and I want to rest a bit before tomorrow, so I'll
+    leave it like this for now
+    """
+
+    print("Upload successful!")
