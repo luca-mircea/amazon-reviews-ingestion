@@ -4,6 +4,7 @@ Here we keep the tasks for processing
 each of the different entrypoints/datasets
 """
 
+import os
 from typing import Optional
 
 from src.api_interactor import APIInteractor
@@ -40,10 +41,12 @@ def process_raw_reviews_data_with_timestamps(
     date_dimension = reviews_processed_dict["date_dimension"]
 
     # load
-    upload_to_dwh(reviews_fact_table, "reviews_fact_table")
-    upload_to_dwh(reviewers, "reviewers")
-    upload_to_dwh(reviewers_user_names, "reviewers_user_names")
-    upload_to_dwh(date_dimension, "date_dimension")
+    upload_to_dwh(reviews_fact_table, "reviews_fact_table", upload_to="dwh_as_stream")
+    upload_to_dwh(reviewers, "reviewers", upload_to="dwh_as_stream")
+    upload_to_dwh(
+        reviewers_user_names, "reviewers_user_names", upload_to="dwh_as_stream"
+    )
+    upload_to_dwh(date_dimension, "date_dimension", upload_to="dwh_as_stream")
 
 
 def process_raw_metadata_with_timestamps(
@@ -105,10 +108,13 @@ def process_raw_reviews_data_without_timestamps() -> None:
     date_dimension = reviews_processed_dict["date_dimension"]
 
     # load
-    upload_to_dwh(reviews_fact_table, "reviews_fact_table")
-    upload_to_dwh(reviewers, "reviewers")
-    upload_to_dwh(reviewers_user_names, "reviewers_user_names")
-    upload_to_dwh(date_dimension, "date_dimension")
+
+    upload_to_dwh(reviews_fact_table, "reviews_fact_table", upload_to="dwh_as_stream")
+    upload_to_dwh(reviewers, "reviewers", upload_to="dwh_as_stream")
+    upload_to_dwh(
+        reviewers_user_names, "reviewers_user_names", upload_to="dwh_as_stream"
+    )
+    upload_to_dwh(date_dimension, "date_dimension", upload_to="dwh_as_stream")
 
 
 def process_raw_metadata_without_timestamps() -> None:
@@ -136,14 +142,96 @@ def process_raw_metadata_without_timestamps() -> None:
 
     # load
 
-    upload_to_dwh(products, "products")
-    upload_to_dwh(product_images, "product_images")
-    upload_to_dwh(product_sales_ranking, "product_sales_ranking")
-    upload_to_dwh(product_categories, "product_categories")
-    upload_to_dwh(product_bought_together, "product_bought_together")
-    upload_to_dwh(product_also_viewed, "product_also_viewed")
+    upload_to_dwh(products, "products", upload_to="dwh_as_stream")
+    upload_to_dwh(product_images, "product_images", upload_to="dwh_as_stream")
+    upload_to_dwh(
+        product_sales_ranking, "product_sales_ranking", upload_to="dwh_as_stream"
+    )
+    upload_to_dwh(product_categories, "product_categories", upload_to="dwh_as_stream")
+    upload_to_dwh(
+        product_bought_together, "product_bought_together", upload_to="dwh_as_stream"
+    )
+    upload_to_dwh(product_also_viewed, "product_also_viewed", upload_to="dwh_as_stream")
 
 
-def check_successful_completion():
+def process_raw_reviews_data_without_timestamps_locally() -> None:
+    """Extract, transform, load raw reviews data"""
+    # first set up client
+    api_interactor = APIInteractor(BASE_URL, BEARER_TOKEN)
+
+    # extract data
+    reviews = retrieve_reviews_data(
+        api_interactor, retrieve_from="local", start_timestamp=None, end_timestamp=None
+    )
+
+    validate_raw_data(reviews, "reviews")
+
+    # transform (i.e. clean) data
+
+    reviews_processed_dict = transform_reviews_data(reviews)
+    reviews_fact_table = reviews_processed_dict["reviews_fact_table"]
+    reviewers = reviews_processed_dict["reviewers"]
+    reviewers_user_names = reviews_processed_dict["reviewers_user_names"]
+    date_dimension = reviews_processed_dict["date_dimension"]
+
+    # load
+
+    upload_to_dwh(
+        reviews_fact_table, "reviews_fact_table", upload_to="mock_dwh_locally"
+    )
+    upload_to_dwh(reviewers, "reviewers", upload_to="mock_dwh_locally")
+    upload_to_dwh(
+        reviewers_user_names, "reviewers_user_names", upload_to="mock_dwh_locally"
+    )
+    upload_to_dwh(date_dimension, "date_dimension", upload_to="mock_dwh_locally")
+
+
+def process_raw_metadata_without_timestamps_locally() -> None:
+    """Extract, transform, load raw metadata"""
+    # first set up client
+
+    api_interactor = APIInteractor(BASE_URL, BEARER_TOKEN)
+
+    # extract data
+    metadata = retrieve_metadata(
+        api_interactor, retrieve_from="local", start_timestamp=None, end_timestamp=None
+    )
+
+    validate_raw_data(metadata, "metadata")
+
+    # transform
+    (
+        products,
+        product_images,
+        product_sales_ranking,
+        product_categories,
+        product_bought_together,
+        product_also_viewed,
+    ) = transform_metadata(metadata)
+
+    # load
+
+    upload_to_dwh(products, "products", upload_to="mock_dwh_locally")
+    upload_to_dwh(product_images, "product_images", upload_to="mock_dwh_locally")
+    upload_to_dwh(
+        product_sales_ranking, "product_sales_ranking", upload_to="mock_dwh_locally"
+    )
+    upload_to_dwh(
+        product_categories, "product_categories", upload_to="mock_dwh_locally"
+    )
+    upload_to_dwh(
+        product_bought_together, "product_bought_together", upload_to="mock_dwh_locally"
+    )
+    upload_to_dwh(
+        product_also_viewed, "product_also_viewed", upload_to="mock_dwh_locally"
+    )
+
+
+def check_successful_completion_s3():
     """List bucket objects + time of download"""
     list_bucket_files_and_update_time()
+
+
+def check_successful_completion_locally():
+    """List DWH objects created locally"""
+    os.listdir("mock_dwh")

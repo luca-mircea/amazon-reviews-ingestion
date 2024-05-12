@@ -17,7 +17,7 @@ from typing import Optional
 
 import pandas as pd
 import requests
-from boto3 import Session
+from smart_open import smart_open
 
 from src.constants import S3_ACCESS_KEY_ID, S3_ACCESS_KEY_SECRET, S3_BUCKET_NAME
 
@@ -218,23 +218,33 @@ class APIInteractor:
     @staticmethod
     def retrieve_data_from_s3(table_name: str) -> pd.DataFrame:
         """Retrieve data from the S3 bucket"""
-        download_path = f"data/{table_name}.csv"
+        # download_path = f"data/{table_name}.csv"
 
-        session = Session(
-            aws_access_key_id=S3_ACCESS_KEY_ID,
-            aws_secret_access_key=S3_ACCESS_KEY_SECRET,
-            region_name="eu-north-1",
-        )
+        # session = Session(
+        #    aws_access_key_id=S3_ACCESS_KEY_ID,
+        #    aws_secret_access_key=S3_ACCESS_KEY_SECRET,
+        #    region_name="eu-north-1",
+        # )
 
-        s3 = session.resource("s3")
+        # s3 = session.resource("s3")
 
-        s3.meta.client.download_file(
-            Bucket=S3_BUCKET_NAME,
-            Key=f"raw_data/{table_name}.csv",
-            Filename="data/reviews.csv",
-        )
+        # s3.meta.client.download_file(
+        #    Bucket=S3_BUCKET_NAME,
+        #    Key=f"raw_data/{table_name}.csv",
+        #    Filename=download_path,
+        # )
+
+        aws_key = S3_ACCESS_KEY_ID
+        aws_secret = S3_ACCESS_KEY_SECRET
+
+        bucket_name = S3_BUCKET_NAME
+        object_key = f"raw_data/{table_name}.csv"
+
+        path = "s3://{}:{}@{}/{}".format(aws_key, aws_secret, bucket_name, object_key)
+
+        df = pd.read_csv(smart_open(path))
 
         print(f"Data ({table_name}) downloaded successfully")
-        data = pd.read_csv(download_path)
+        # data = pd.read_csv(download_path)
 
-        return data
+        return df
